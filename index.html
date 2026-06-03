@@ -2,23 +2,143 @@
 <html>
   <head>
     <script async src="https://api.glia.com/salemove_integration.js"></script>
-  <title>CE Testing Site</title>
-  <link rel="icon" type="image/x-icon" href="images/favicon.ico">
-    <style>
-    h1  {color:#7C19DD;}
-    h1  {font-family:roboto;}
-    img {
-      width:50%;
-    }
-    </style>
-
+    <title>CE Testing Site</title>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <link rel="stylesheet" href="styles.css">
   </head>
 
   <body>
-    <center>
-      <img src="images/Full LOGO_black.png" alt="CE logo" style="width:750px">
-    </center>
+    <header class="header">
+      <nav class="navbar">
+        <div class="logo">
+          <img src="images/favicon.ico" alt="Bank logo">
+          CE Glia Bank
+        </div>
 
-    <h1 style="text-align:center;">Welcome to our testing site!</h2>
+        <button class="menu-btn" id="menuBtn">☰</button>
+
+        <ul class="nav-links" id="navLinks">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#cards">Cards</a></li>
+          <li><a href="#security">Security</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+
+        <a href="#login" class="btn-login">Log In</a>
+      </nav>
+    </header>
+
+    <main>
+      <!-- <center>
+        <img src="images/Full LOGO_black.png" alt="CE logo" style="width:750px">
+      </center> -->
+      <section class="hero" id="home">
+        <div class="hero-text">
+          <p class="tag">Welcome to our testing site!</p>
+          <h1>Your money, your goals, and your future in one place.</h1>
+          <p class="description">
+            CE GLia Bank helps you manage your money in a simple, secure, and fast way
+            from any device.
+          </p>
+
+          <div class="hero-buttons">
+            <a href="#services" class="btn-primary">Explore Services</a>
+            <a href="#cards" class="btn-secondary">View Cards</a>
+          </div>
+        </div>
+
+        <div class="hero-card">
+          <div class="bank-card">
+            <div class="card-top">
+              <span>CE Glia Bank</span>
+              <span>VISA</span>
+            </div>
+
+            <div class="chip"></div>
+
+            <p class="card-number">**** **** **** 2849</p>
+
+            <div class="card-bottom">
+              <div>
+                <small>Card Holder</small>
+                <p>CE Glia Client</p>
+              </div>
+              <div>
+                <small>Balance</small>
+                <p>$24,580</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="balance-box">
+            <p>Available Balance</p>
+            <h2>$24,580.00 USD</h2>
+            <span>+12.5% this month</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="stats">
+        <div>
+          <h3>+2M</h3>
+          <p>Active clients</p>
+        </div>
+        <div>
+          <h3>24/7</h3>
+          <p>Digital support</p>
+        </div>
+        <div>
+          <h3>100%</h3>
+          <p>Secure transactions</p>
+        </div>
+        <div>
+          <h3>5 min</h3>
+          <p>To open an account</p>
+        </div>
+      </section>
+
+      <section class="section" id="services">
+        <div class="section-title">
+          <p>Services</p>
+          <h2>Financial solutions for every stage of your life</h2>
+        </div>
+
+        <div class="services-grid">
+          <article class="service-card">
+            <center><div class="icon"><img src="images/digitalAcc.png" alt="Bank Security Icon"></div></center>
+            <h3>Digital Accounts</h3>
+            <p>
+              Manage your money, check your transactions, and make payments
+              from our mobile app.
+            </p>
+          </article>
+
+          <article class="service-card">
+            <center><div class="icon"><img src="images/perLoan.png" alt="Bank Security Icon"></div></center>
+            <h3>Personal Loans</h3>
+            <p>
+              Clear and flexible financing options designed to fit your needs.
+            </p>
+          </article>
+
+          <article class="service-card">
+            <center><div class="icon"><img src="images/invest.png" alt="Investments Icon"></div></center>
+            <h3>Investments</h3>
+            <p>
+              Grow your money with simple tools and personalized investment plans.
+            </p>
+          </article>
+
+          <article class="service-card">
+            <center><div class="icon"><img src="images/security.png" alt="Bank Security Icon"></div></center>
+            <h3>Bank Security</h3>
+            <p>
+              Data protection, smart alerts, and real-time monitoring for your account.
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
   </body>
 </html>
