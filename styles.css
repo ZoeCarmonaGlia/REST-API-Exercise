@@ -168,7 +168,7 @@ img {
 }
 
 .bank-card {
-  background: linear-gradient(135deg, #14213d, #0057ff);
+  background: linear-gradient(135deg, #14213d, #450693);
   color: #fff;
   padding: 30px;
   border-radius: 28px;
@@ -307,7 +307,7 @@ img {
 }
 
 .cards-section {
-  background: #14213d;
+  background: #1E104E;
   color: #fff;
   padding: 90px 24px;
 }
@@ -334,15 +334,15 @@ img {
 
 .plan-card.featured {
   transform: scale(1.05);
-  border: 3px solid #fca311;
+  border: 3px solid #AD49E1;
 }
 
 .badge {
   position: absolute;
   top: -16px;
   right: 24px;
-  background: #fca311;
-  color: #14213d;
+  background: #AD49E1;
+  color: white;
   padding: 8px 14px;
   border-radius: 20px;
   font-size: 13px;
@@ -514,7 +514,7 @@ img {
 }
 
 .footer {
-  background: #14213d;
+  background: #1E104E;
   color: #cfd8ff;
   text-align: center;
   padding: 28px;
