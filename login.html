@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script async src="https://api.glia.com/salemove_integration.js"></script>
+    <title>CE Testing Site | Login</title>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="login-body"> 
+    <main class="login-container">
+        <section class="login-left">
+            <a href="index.html" class="back-link">Back to Home</a>
+
+            <h1>Access your online banking account.</h1>
+
+            <p>Sign in to view your balance, account information, cards, and recent transactions from your secure digital dashboard.</p>
+        </section>
+
+        <section class="login-form-card">
+            <h2>Online Banking Login</h2>
+            <p class="login-subtitle">Enter your credentials to continue.</p>
+
+            <form id="loginForm">
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input
+                    type="text"
+                    id="username"
+                    placeholder="Enter your username"
+                    required
+                    />
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input
+                    type="password"
+                    id="password"
+                    placeholder="Enter your password"
+                    required
+                    />
+                </div>
+
+                <p id="errorMessage" class="error-message"></p>
+
+                <button type="submit" class="login-button">Sign In</button>
+            </form>
+        </section>
+
+    </main>
+</body>
+</html>
