@@ -21,8 +21,7 @@
           <li><a href="#home">Home</a></li>
           <li><a href="#services">Services</a></li>
           <li><a href="#cards">Cards</a></li>
-          <!-- <li><a href="#security">Security</a></li>
-          <li><a href="#contact">Contact</a></li> -->
+          <li><a href="#feedback">Feedback</a></li>
         </ul>
 
         <a href="login.html" class="btn-login">Login</a>
@@ -181,6 +180,40 @@
             <a href="#" class="btn-plan">Learn More</a>
           </article>
         </div>
+      </section>
+
+      <section class="feedback-section" id="feedback">
+        <div class="section-title">
+          <p>Feedback</p>
+          <h2>Tell us about your experience</h2>
+        </div>
+
+        <form class="feedback-form">
+          <div class="form-row">
+            <input type="text" placeholder="Full name" required />
+            <input type="email" placeholder="Email address" required />
+          </div>
+
+          <select required>
+            <option value="">Select a category</option>
+            <option value="service">Service rating</option>
+            <option value="complaint">Complaint</option>
+            <option value="suggestion">Suggestion</option>
+            <option value="support">Customer support</option>
+          </select>
+
+          <select required>
+            <option value="">Rate our service</option>
+            <option value="excellent">Excellent</option>
+            <option value="good">Good</option>
+            <option value="regular">Regular</option>
+            <option value="bad">Bad</option>
+          </select>
+
+          <textarea placeholder="Write your comments here..." required></textarea>
+
+          <button type="button">Submit Feedback</button>
+        </form>
       </section>
     </main>
 

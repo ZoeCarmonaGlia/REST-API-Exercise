@@ -252,7 +252,7 @@ img {
 }
 
 .section-title p {
-  color: white;
+  color: #8500D6;
   font-weight: 700;
   margin-bottom: 10px;
 }
@@ -597,6 +597,73 @@ img {
 
   .balance-box {
     width: 95%;
+  }
+}
+
+.feedback-section {
+  max-width: 900px;
+  margin: auto;
+  padding: 90px 24px;
+}
+
+.feedback-form {
+  background: #fff;
+  padding: 36px;
+  border-radius: 28px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.06);
+  display: grid;
+  gap: 18px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.feedback-form input,
+.feedback-form select,
+.feedback-form textarea {
+  width: 100%;
+  padding: 16px;
+  border: 1px solid #d8deea;
+  border-radius: 16px;
+  font-size: 15px;
+  outline: none;
+  background: #fff;
+  color: #14213d;
+}
+
+.feedback-form textarea {
+  height: 150px;
+  resize: none;
+}
+
+.feedback-form input:focus,
+.feedback-form select:focus,
+.feedback-form textarea:focus {
+  border-color: #0057ff;
+}
+
+.feedback-form button {
+  border: none;
+  background: #59079C;
+  color: #fff;
+  padding: 15px;
+  border-radius: 18px;
+  font-weight: 800;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.feedback-form button:hover {
+  background: #CA8FFA;
+}
+
+@media (max-width: 700px) {
+  .form-row {
+    grid-template-columns: 1fr;
   }
 }
 
