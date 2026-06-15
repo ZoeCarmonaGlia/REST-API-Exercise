@@ -7,13 +7,55 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <main>
+    <header class="dashboard-header">
+        <div class="dashboard-logo">
+            <img src="images/favicon.ico" alt="Bank logo">
+            <p>CE Glia Bank</p>
+        </div>
+
+        <button class="logout-btn" id="logoutBtn">Logout</button>
+    </header>
+
+    <main class="dashboard">
         <section class="dashboard-welcome">
             <div>
                 <p class="dashboard-tag">Personal Banking Dashboard</p>
                 <h1>Welcome, G Test!</h1>
                 <p>Here is the summary of your account balance</p>
             </div>
+
+            <div class="status-pill">Account Active</div>
+        </section>
+
+        <section class="dashboard-grid">
+            <article class="balance-card">
+                <p>Available Balance</p>
+                <h2>$24, 500.00</h2>
+                <span>Checking Account - ***** 2849</span>
+            </article>
+
+            <article class="dashboard-bank-card">
+                <div class="card-top">
+                    <span>CE Glia Bank</span>
+                    <span>VISA</span>
+                </div>
+
+                <div class="chip"></div>
+
+                <p class="card-number">**** **** **** 2738</p>
+
+                <div class="card-bottom">
+                    <div>
+                        <small>Card Holder</small>
+                        <p>Zoe Glia</p>
+                    </div>
+
+                    <div>
+                        <small>Expires</small>
+                        <p>09/29</p>
+                    </div>
+                </div>
+            </article>
         </section>
 
         <section class="dashboard-main">

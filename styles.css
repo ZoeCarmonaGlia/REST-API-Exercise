@@ -49,17 +49,6 @@ img {
   gap: 10px;
 }
 
-.logo span {
-  background: rgb(111, 8, 208);
-  color: #fff;
-  width: 38px;
-  height: 38px;
-  border-radius: 12px;
-  display: grid;
-  place-items: center;
-  font-size: 15px;
-}
-
 .nav-links {
   display: flex;
   list-style: none;
@@ -751,4 +740,44 @@ img {
   .login-form-card {
   padding: 28px;
   }
+}
+
+/* -----------------DASHBOARD ------------------------------ */
+.dashboard-header {
+  /* max-width: 1200px; */
+  margin: auto;
+  padding: 22px 150px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06); 
+}
+
+.dashboard-logo {
+  font-size: 24px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logout-btn {
+  text-decoration: none;
+  background: #760ACC;
+  color: #fff;
+  padding: 11px 20px;
+  border-radius: 30px;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.logout-btn:hover {
+  background: #CA8FFA;
+}
+
+.dashboard {
+  max-width: 1200px;
+  margin: auto;
+  padding: 30px 24px 80px;
 }
