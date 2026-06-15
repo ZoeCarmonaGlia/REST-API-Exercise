@@ -744,14 +744,12 @@ img {
 
 /* -----------------DASHBOARD ------------------------------ */
 .dashboard-header {
-  /* max-width: 1200px; */
+  max-width: 1200px;
   margin: auto;
-  padding: 22px 150px;
+  padding: 22px 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06); 
 }
 
 .dashboard-logo {
@@ -762,13 +760,25 @@ img {
   gap: 10px;
 }
 
+.dashboard-logo span {
+  background: #0057ff;
+  color: #fff;
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-size: 15px;
+}
+
 .logout-btn {
-  text-decoration: none;
+  border: none;
   background: #760ACC;
   color: #fff;
-  padding: 11px 20px;
+  padding: 12px 20px;
   border-radius: 30px;
-  font-weight: 600;
+  font-weight: 800;
+  cursor: pointer;
   transition: 0.3s;
 }
 
@@ -780,4 +790,110 @@ img {
   max-width: 1200px;
   margin: auto;
   padding: 30px 24px 80px;
+}
+
+.dashboard-welcome {
+  background: linear-gradient(135deg, #450693, #9d33f5);
+  color: #fff;
+  border-radius: 32px;
+  padding: 42px;
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: center;
+  box-shadow: 0 25px 60px rgba(51, 0, 255, 0.25);
+}
+
+.dashboard-tag {
+  color: #c59eff;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.dashboard-welcome h1 {
+  font-size: 42px;
+  margin-bottom: 10px;
+  color: white;
+}
+
+.dashboard-welcome p {
+  color: #dbe7ff;
+}
+
+.status-pill {
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  padding: 12px 18px;
+  border-radius: 30px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-top: 28px;
+}
+
+.balance-card,
+.dashboard-info-card,
+.dashboard-bank-card,
+.transactions-section {
+  background: #fff;
+  border-radius: 28px;
+  padding: 30px;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.06);
+}
+
+.balance-card p {
+  color: #5d6b82;
+  margin-bottom: 8px;
+}
+
+.balance-card h2 {
+  font-size: 46px;
+  margin-bottom: 8px;
+}
+
+.balance-card span {
+  color: #00a86b;
+  font-weight: 800;
+}
+
+.dashboard-bank-card {
+  background: linear-gradient(135deg, #14213d, #450693);
+  color: #fff;
+  min-height: 280px;
+}
+
+.card-top,
+.card-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chip {
+  width: 54px;
+  height: 38px;
+  background: linear-gradient(135deg, #ffd166, #fca311);
+  border-radius: 10px;
+  margin: 46px 0 28px;
+}
+
+.card-number {
+  font-size: 24px;
+  letter-spacing: 3px;
+  margin-bottom: 34px;
+}
+
+.card-bottom small {
+  display: block;
+  color: #cfd8ff;
+  margin-bottom: 4px;
+}
+
+.card-bottom p {
+  font-weight: 800;
 }
