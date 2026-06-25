@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <script>
+      //Read idtoken from query parameter with the same name.
+      const params = new Proxy(new URLSearchParams(window.location.search), {
+        get: (searchParams, prop) => searchParams.get(prop),
+      });
+      const idToken = params.idtoken;
+      window.getGliaContext = () => ({ idToken });
+    </script>
     <script async src="https://api.glia.com/salemove_integration.js"></script>
     <title>CE Testing Site</title>
     <link rel="icon" type="image/x-icon" href="images/favicon.ico">
