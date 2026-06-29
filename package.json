@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "esbuild": "^0.28.1"
+  },
+  "scripts": {
+    "build-analyzer": "./node_modules/esbuild/bin/esbuild  --bundle --format=esm --outfile=functionB-out.js --target=es2020 functionB.js",
+    "build-gateway": "./node_modules/esbuild/bin/esbuild  --bundle --format=esm --outfile=functionA-out.js --target=es2020 functionA.js"
+  }
+}
