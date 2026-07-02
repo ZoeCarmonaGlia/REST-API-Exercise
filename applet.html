@@ -61,6 +61,12 @@
     font-size: 0.85rem;
     margin-top: 20px;
   }
+
+  .result-error {
+    border: 2px solid #ef4444; 
+    background-color: #fef2f2 !important; 
+    color: #b91c1c !important; 
+  }
 </style>
 
 <div class="container">
@@ -134,7 +140,8 @@
           const data = await response.json();
           
           // Display the final verdict on the screen
-          resultDiv.innerText = JSON.stringify(data, null, 2);
+          // resultDiv.innerText = JSON.stringify(data, null, 2);
+          resultDiv.innerText = data.alert_message || JSON.stringify(data);
 
         } catch (error) {
           resultDiv.innerText = `Error: ${error.message}`;
