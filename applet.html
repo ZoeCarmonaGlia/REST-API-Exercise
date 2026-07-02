@@ -1,155 +1,181 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <!-- Include the Glia Applet SDK -->
+  <meta charset="UTF-8">
+  <title>Message Analyzer Applet</title>
   <script src="https://libs.glia.com/axon.js"></script>
   <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
-
-  body { 
-    font-family: 'Inter', sans-serif; 
-    padding: 40px; 
-    background-color: #f8fafc; 
-    color: #1e293b;
-    display: flex;
-    justify-content: center;
-  }
-
-  .container {
-    background: rgba(255, 255, 255, 0.95);
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 500px;
-  }
-
-  h3 { margin-top: 0; color: #0f172a; }
-
-  #latestMessage { 
-    margin: 15px 0; 
-    padding: 15px; 
-    background: #f1f5f9; 
-    border-left: 4px solid #cbd5e1;
-    border-radius: 4px; 
-    font-style: italic; 
-    color: #475569;
-  }
-
-  button { 
-    width: 100%;
-    padding: 12px; 
-    background: #760ACC; 
-    color: white; 
-    border: none; 
-    border-radius: 8px; 
-    font-weight: 600;
-    cursor: pointer; 
-    transition: background 0.2s, transform 0.1s;
-  }
-
-  button:hover:not(:disabled) { background: #760ACC; }
-  button:active:not(:disabled) { transform: translateY(1px); }
-  button:disabled { background: #cbd5e1; cursor: not-allowed; }
-
-  pre { 
-    background: #1e293b; 
-    color: #f8fafc;
-    padding: 15px; 
-    border-radius: 8px; 
-    overflow-x: auto; 
-    font-size: 0.85rem;
-    margin-top: 20px;
-  }
-
-  .result-error {
-    border: 2px solid #ef4444; 
-    background-color: #fef2f2 !important; 
-    color: #b91c1c !important; 
-  }
-</style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+    
+    body { 
+      font-family: 'Inter', sans-serif; 
+      padding: 40px; 
+      background-color: #f8fafc; 
+      color: #1e293b; 
+      display: flex; 
+      justify-content: center; 
+    }
+    
+    .container { 
+      background: rgba(255, 255, 255, 0.95); 
+      padding: 2rem; 
+      border-radius: 12px; 
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); 
+      width: 100%; 
+      max-width: 500px; 
+    }
+    
+    h3 { margin-top: 0; color: #0f172a; }
+    
+    #latestMessage { 
+      margin: 15px 0; 
+      padding: 15px; 
+      background: #f1f5f9; 
+      border-left: 4px solid #cbd5e1; 
+      border-radius: 4px; 
+      font-style: italic; 
+      color: #475569; 
+    }
+    
+    .button-group { 
+      display: flex; 
+      gap: 10px; 
+    }
+    
+    button { 
+      flex: 1; 
+      padding: 12px; 
+      color: white; 
+      border: none; 
+      border-radius: 8px; 
+      font-weight: 600; 
+      cursor: pointer; 
+      transition: background 0.2s, transform 0.1s; 
+    }
+    
+    #analyzeVipBtn { background: #760ACC; }
+    #analyzeNormalBtn { background: #64748b; }
+    
+    button:hover:not(:disabled) { opacity: 0.9; }
+    button:active:not(:disabled) { transform: translateY(1px); }
+    button:disabled { background: #cbd5e1; cursor: not-allowed; }
+    
+    #verdictOutput { 
+      font-weight: 600; 
+      margin: 15px 0 5px 0; 
+      font-size: 1rem; 
+    }
+  </style>
+</head>
+<body>
 
 <div class="container">
-  <h3>VIP Message Analyzer</h3>
+  <h3>Message Analyzer</h3>
   
   <div><strong>Latest Visitor Message:</strong></div>
   <div id="latestMessage">Waiting for the visitor to say something...</div>
   
-  <button id="analyzeVipBtn" disabled>Analyze as VIP</button>
+  <div class="button-group">
+    <button id="analyzeVipBtn" disabled>Analyze as VIP</button>
+    <button id="analyzeNormalBtn" disabled>Analyze Normal</button>
+  </div>
   
-  <pre id="result">Result will appear here...</pre>
+  <div id="tantrum-meter" style="margin-top: 20px; display: none;">
+    <div id="verdictOutput"></div>
+    <div id="gauge" style="display: flex; height: 30px; border-radius: 5px; overflow: hidden; margin-top: 10px;"></div>
+    <div id="indicator" style="text-align: center; font-size: 1.1rem; font-weight: bold; margin-top: 10px;"></div>
+  </div>
+</div>
 
-  <script>
-const button = document.getElementById("analyzeVipBtn");
-const latestMessageDiv = document.getElementById("latestMessage");
-const resultDiv = document.getElementById("result");
+<script>
+  const vipBtn = document.getElementById("analyzeVipBtn");
+  const normalBtn = document.getElementById("analyzeNormalBtn");
+  const latestMessageDiv = document.getElementById("latestMessage");
+  
+  const meterDiv = document.getElementById("tantrum-meter");
+  const verdictDiv = document.getElementById("verdictOutput");
+  const gaugeDiv = document.getElementById("gauge");
+  const indicatorDiv = document.getElementById("indicator"); 
+  
+  let lastVisitorText = ""; 
 
-let lastVisitorText = "";
+  window.getGliaApi({version: 'v1'}).then(function(glia) {
+    
+    // Buffered listener to monitor ongoing conversation logs reliably
+    glia.addBufferedEventListener(glia.EVENTS.CHAT_MESSAGES, function(messages) {
+      if (!messages) return;
+      const msgArray = Array.isArray(messages) ? messages : [messages];
+      const lastMessage = msgArray[msgArray.length - 1];
+      const senderType = lastMessage.sender && lastMessage.sender.type ? lastMessage.sender.type : lastMessage.sender;
+      
+      if (lastMessage && senderType === 'visitor') {
+        lastVisitorText = lastMessage.content;
+        latestMessageDiv.innerText = `"${lastVisitorText}"`;
+        vipBtn.disabled = false; 
+        normalBtn.disabled = false;
+      }
+    });
 
-window.getGliaApi({version: 'v1'}).then(function(glia) {
+    async function performAnalysis(isVip) {
+      if (!lastVisitorText) return;
+      
+      meterDiv.style.display = "block";
+      gaugeDiv.innerHTML = "";
+      verdictDiv.innerText = "Analyzing secure message...";
+      indicatorDiv.innerText = "";
+      
+      vipBtn.disabled = true;
+      normalBtn.disabled = true;
 
-// Function to process messages and update the UI
-function setupChatListener(engagement) {
-engagement.chat.addEventListener(engagement.chat.EVENTS.MESSAGES, function(messages) {
-// Handle both single objects and arrays of messages
-const msgArray = Array.isArray(messages) ? messages : [messages];
-const lastMessage = msgArray[msgArray.length - 1];
+      try {
+        // Pull the valid human operator bearer headers natively 
+        let headers = await glia.getRequestHeaders();
+        const authToken = headers['Authorization'];
 
-// Only capture messages sent by the visitor
-if (lastMessage && lastMessage.sender === 'visitor') {
-lastVisitorText = lastMessage.content;
-latestMessageDiv.innerText = `"${lastVisitorText}"`;
-button.disabled = false;
-}
-});
-}
+        // Build flat data architecture for Function A
+        const payloadData = {
+          message: lastVisitorText,
+          is_vip: isVip
+        };
 
-// 1. Listen for new engagements
-glia.addBufferedEventListener(glia.EVENTS.ENGAGEMENT, function(engagement) {
-setupChatListener(engagement);
-});
+        const response = await fetch("https://api.glia.com/integrations/9ee11a57-614e-4aa2-96d0-e24dbba33392/endpoint", {
+          method: "POST",
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': authToken
+          },
+          body: JSON.stringify({ payload: payloadData }) 
+        });
 
-// 2. Catch active engagements if the Applet loads after the chat starts
-glia.getCurrentEngagement().then(function(engagement) {
-if (engagement) {
-setupChatListener(engagement);
-}
-});
+        const result = await response.json();
+        const level = result.tantrum_level || 0;
+        
+        // Loop to dynamically generate the 10 gauge color bar segments
+        let gaugeBlocks = '';
+        for (let i = 1; i <= 10; i++) {
+          // Color ranges matching metric guidelines: Green (1-4), Yellow (5-7), Red (8-10)
+          const color = i <= level ? (i > 7 ? '#ff0000' : (i > 4 ? '#ffcc00' : '#00cc00')) : '#e2e8f0';
+          gaugeBlocks += `<div style="flex: 1; background: ${color}; border-right: 1px solid #fff;"></div>`;
+        }
+        
+        // Render prioritization metrics out cleanly
+        verdictDiv.innerText = result.verdict || "Standard protocol";
+        gaugeDiv.innerHTML = gaugeBlocks;
+        indicatorDiv.innerText = 'Tantrum Level: ' + level + '/10';
 
-// 3. Handle the button click
-button.addEventListener("click", async function() {
-if (!lastVisitorText) return;
+      } catch (error) {
+        gaugeDiv.innerHTML = "";
+        verdictDiv.innerText = "";
+        indicatorDiv.innerText = "Error: " + error.message;
+      } finally {
+        vipBtn.disabled = false;
+        normalBtn.disabled = false;
+      }
+    }
 
-resultDiv.innerText = "Analyzing secure message...";
-button.disabled = true;
-
-try {
-// Get the session headers and extract token
-let headers = await glia.getRequestHeaders();
-const userToken = headers['Authorization'];
-
-const payload = {
-message: lastVisitorText,
-is_vip: true,
-token: userToken
-};
-
-// Call the Gateway (Function A)
-const response = await fetch("https://api.glia.com/integrations/9ee11a57-614e-4aa2-96d0-e24dbba33392/endpoint", {
-method: "POST",
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify(payload)
-});
-
-const result = await response.json();
-resultDiv.innerText = JSON.stringify(result, null, 2);
-} catch (error) {
-resultDiv.innerText = "Error: " + error.message;
-} finally {
-button.disabled = false;
-}
-});
-});
+    vipBtn.addEventListener("click", () => performAnalysis(true));
+    normalBtn.addEventListener("click", () => performAnalysis(false));
+  });
 </script>
 </body>
 </html>
