@@ -1,54 +1,59 @@
-export async function onInvoke(request, env) {
-  console.log("=== FUNCTION B START ===");
-  
-  const body = await request.json();
-  console.log("Function B Raw Body received:", JSON.stringify(body));
-  
-  let incomingPayload = body.payload || body;
-  console.log("Initial incomingPayload evaluation:", JSON.stringify(incomingPayload));
-  
-  // Handle both string and object payloads defensively to prevent crashes
-  if (typeof incomingPayload === 'string') {
-    console.log("Incoming payload detected as a string. Parsing JSON...");
-    try {
-      incomingPayload = JSON.parse(incomingPayload);
-      console.log("Successfully parsed stringified payload:", JSON.stringify(incomingPayload));
-    } catch (e) {
-      console.warn("Payload is raw non-JSON text. Wrapping inside fallback object template:", e.message);
-      incomingPayload = { message: incomingPayload };
-    }
-  }
-  
-  const message = (incomingPayload.message || "").toLowerCase();
-  console.log("Sanitized message text to scan (forced lowercase):", `"${message}"`);
+async function onInvoke(request, env) {
+  console.log("=== SCORING ENGINE START ===");
   
   const scoring = {
-    "cancel": 3, "terrible": 2, "garbage": 2, "lawsuit": 3, "sue": 3,
-    "bad": 1, "angry": 2, "refund": 1, "complaint": 1, "issue": 1, "problem": 1
+    "lawsuit": 10, "sue": 10, "cancel": 10,
+    "garbage": 9, "terrible": 9, "disgusting": 9,
+    "unacceptable": 8, "angry": 8, "hate": 8,
+    "frustrated": 7, "ridiculous": 7, "annoying": 7,
+    "slow": 6, "waiting": 6,
+    "confused": 5, "issue": 5, "problem": 5,
+    "help": 3, "please": 3,
+    "good": 1, "great": 1, "thanks": 1
   };
 
-  let level = 0;
-  console.log("Beginning regex loop keyword dictionary scanning...");
-  
-  for (let word in scoring) {
-    const regex = new RegExp(word, 'g');
-    const matches = message.match(regex);
-    if (matches) {
-      const addedPoints = matches.length * scoring[word];
-      level += addedPoints;
-      console.log(`Keyword Match! Word: "${word}" matched ${matches.length} time(s). Adding ${addedPoints} points.`);
+  try {
+    const parsedBody = await request.json();
+    console.log("Scoring Engine received raw object:", JSON.stringify(parsedBody));
+    
+    let targetPayload = parsedBody.payload || parsedBody;
+    
+    // If the payload is stringified JSON, parse it safely
+    if (typeof targetPayload === 'string') {
+      try {
+        targetPayload = JSON.parse(targetPayload);
+      } catch (e) {
+        console.error("Failed to parse inner payload string:", e.message);
+      }
     }
+
+    // Extract the snake_case message text property
+    const finalMessage = targetPayload.message_text || targetPayload.message || "";
+    const lowerCaseMessage = finalMessage.toLowerCase();
+    
+    console.log(`Scanning text: "${lowerCaseMessage}"`);
+
+    let level = 0;
+
+    // Run your standard keyword point counting logic
+    for (let word in scoring) {
+      const regex = new RegExp(word, 'g');
+      const matches = lowerCaseMessage.match(regex);
+      if (matches) {
+        level += matches.length * scoring[word];
+      }
+    }
+
+    level = Math.min(level, 10); // Cap output scale at 10
+    console.log(`Returning level: ${level}`);
+
+    return new Response(JSON.stringify({ tantrum_level: level }), {
+      headers: { "Content-Type": "application/json" }
+    });
+
+  } catch (err) {
+    return new Response(JSON.stringify({ tantrum_level: 0, error: err.message }), { status: 500 });
   }
-
-  console.log(`Raw calculated metric level before cap: ${level}`);
-  level = Math.min(level, 10); // Cap metric scale at 10
-  console.log(`Final calculated level output (capped at 10): ${level}`);
-  
-  const responsePayload = { tantrum_level: level };
-  console.log("Function B responding with payload:", JSON.stringify(responsePayload));
-  console.log("=== FUNCTION B END ===");
-
-  return new Response(JSON.stringify(responsePayload), { 
-    headers: { "Content-Type": "application/json" } 
-  });
 }
+
+export { onInvoke };

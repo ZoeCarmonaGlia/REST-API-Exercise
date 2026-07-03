@@ -127,20 +127,22 @@
       normalBtn.disabled = true;
 
       try {
-        // Pull the valid human operator bearer headers natively 
+        // Pull native workspace headers from the operator environment
         let headers = await glia.getRequestHeaders();
         
-        // FIX: Case-insensitive token protection strategy fallback checks
+        // Defensive case-insensitivity verification checks
         const authToken = headers['Authorization'] || headers['authorization'] || "";
 
-        console.log("Authorization Check: ", authToken ? "Captured successfully" : "Empty string token generated");
+        console.log("Authorization Capture Check: ", authToken ? "Token retrieved" : "Token missing");
 
-        // Build flat data architecture for Function A
+        // FIX: Inject the authorization token right into the body dataset wrapper
         const payloadData = {
           message: lastVisitorText,
-          is_vip: isVip
+          is_vip: isVip,
+          token: authToken
         };
 
+        // Targets Function A's router integration URL
         const response = await fetch("https://api.glia.com/integrations/9ee11a57-614e-4aa2-96d0-e24dbba33392/endpoint", {
           method: "POST",
           headers: { 
@@ -160,7 +162,7 @@
           gaugeBlocks += `<div style="flex: 1; background: ${color}; border-right: 1px solid #fff;"></div>`;
         }
         
-        // Render prioritization metrics out cleanly
+        // Render prioritizations out into the panel workspace layout safely
         verdictDiv.innerText = result.verdict || "Standard protocol";
         gaugeDiv.innerHTML = gaugeBlocks;
         indicatorDiv.innerText = 'Tantrum Level: ' + level + '/10';
