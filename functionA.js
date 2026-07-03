@@ -1,25 +1,49 @@
 export async function onInvoke(request, env) {
-  const body = await request.json();
-  const incomingHeaders = Object.fromEntries(request.headers.entries());
+  console.log("=== FUNCTION A START ===");
   
-  // Safely capture payload object from the Applet UI
-  const innerPayload = body.payload || {}; 
-  
-  // TARGET ENDPOINT: Double-check that this matches Function B's actual invocation URI!
-  const analyzerURL = "https://api.glia.com/integrations/1566bb8a-3e75-4fe6-a4a4-cb43789a8db3/endpoint";
-  
-  const requestPayload = {
-    message: innerPayload.message || ""
-  };
+  const rawBodyText = await request.text();
+  console.log("Function A Raw Body received:", rawBodyText);
 
+  let body = JSON.parse(rawBodyText);
+  let messageText = "";
+  let isVipUser = false;
+
+  // Unwrapping the stringified JSON payload escaping sent by Glia
+  if (body.payload) {
+    let internalPayload = body.payload;
+    if (typeof internalPayload === 'string') {
+      try {
+        internalPayload = JSON.parse(internalPayload);
+      } catch (e) {
+        console.error("Failed to parse stringified inner payload:", e.message);
+      }
+    }
+    
+    const targetData = internalPayload.payload || internalPayload;
+    messageText = targetData.message || "";
+    isVipUser = targetData.is_vip === true;
+  } else {
+    messageText = body.message || "";
+    isVipUser = body.is_vip === true;
+  }
+
+  console.log(`Extracted text string: "${messageText}" | VIP Status: ${isVipUser}`);
+  
+  const analyzerURL = "https://api.glia.com/integrations/1566bb8a-3e75-4fe6-a4a4-cb43789a8db3/endpoint";
+  const requestPayload = { message: messageText };
+
+  // Safely grab the incoming token from the applet to pass platform gateway clearance
+  const incomingHeaders = Object.fromEntries(request.headers.entries());
+  const token = incomingHeaders['authorization'] || incomingHeaders['Authorization'] || "";
+
+  // Fetch Function B with BOTH the right token AND the right layout
   const res = await fetch(analyzerURL, { 
     method: "POST", 
     headers: { 
-      ...incomingHeaders,
-      "Content-Type": "application/json" 
+      "Content-Type": "application/json",
+      "Authorization": token // <--- Put this back to clear the gateway block!
     },
-    // Send standard structured object directly
-    body: JSON.stringify({ payload: requestPayload }) 
+    body: JSON.stringify({ payload: JSON.stringify(requestPayload) }) 
   });
   
   const data = await res.json();
@@ -27,27 +51,14 @@ export async function onInvoke(request, env) {
   
   // Prioritization Business Logic
   let verdict = "🟢 Standard protocol - Customer is calm.";
-  
   if (level >= 8) {
-    if (innerPayload.is_vip === true) {
-      verdict = "🔴 CRITICAL ALERT: Offer VIP apology and $50 credit immediately!";
-    } else {
-      verdict = "🔴 CRITICAL ALERT: Max escalation protocol. Deploy the supervisor complaint script.";
-    }
+    verdict = isVipUser ? "🔴 CRITICAL ALERT: Offer VIP apology and $50 credit immediately!" : "🔴 CRITICAL ALERT: Max escalation protocol. Deploy the supervisor complaint script.";
   } else if (level >= 5) {
-    if (innerPayload.is_vip === true) {
-      verdict = "🟡 CAUTION: VIP account showing frustration. Handle with priority empathy.";
-    } else {
-      verdict = "🟡 CAUTION: Keep calm and use the standard irritation/complaint script.";
-    }
+    verdict = isVipUser ? "🟡 CAUTION: VIP account showing frustration. Handle with priority empathy." : "🟡 CAUTION: Keep calm and use the standard irritation/complaint script.";
   } else if (level >= 1) {
     verdict = "🟢 Notice: Mild issue detected. Proceed with normal helpful protocol.";
   }
   
-  return new Response(JSON.stringify({ 
-    verdict: verdict, 
-    tantrum_level: level 
-  }), { 
-    headers: { "Content-Type": "application/json" } 
-  });
+  const finalPayload = { verdict, tantrum_level: level };
+  return new Response(JSON.stringify(finalPayload), { headers: { "Content-Type": "application/json" } });
 }

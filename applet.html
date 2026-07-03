@@ -101,7 +101,6 @@
 
   window.getGliaApi({version: 'v1'}).then(function(glia) {
     
-    // Buffered listener to monitor ongoing conversation logs reliably
     glia.addBufferedEventListener(glia.EVENTS.CHAT_MESSAGES, function(messages) {
       if (!messages) return;
       const msgArray = Array.isArray(messages) ? messages : [messages];
@@ -130,7 +129,11 @@
       try {
         // Pull the valid human operator bearer headers natively 
         let headers = await glia.getRequestHeaders();
-        const authToken = headers['Authorization'];
+        
+        // FIX: Case-insensitive token protection strategy fallback checks
+        const authToken = headers['Authorization'] || headers['authorization'] || "";
+
+        console.log("Authorization Check: ", authToken ? "Captured successfully" : "Empty string token generated");
 
         // Build flat data architecture for Function A
         const payloadData = {
@@ -153,7 +156,6 @@
         // Loop to dynamically generate the 10 gauge color bar segments
         let gaugeBlocks = '';
         for (let i = 1; i <= 10; i++) {
-          // Color ranges matching metric guidelines: Green (1-4), Yellow (5-7), Red (8-10)
           const color = i <= level ? (i > 7 ? '#ff0000' : (i > 4 ? '#ffcc00' : '#00cc00')) : '#e2e8f0';
           gaugeBlocks += `<div style="flex: 1; background: ${color}; border-right: 1px solid #fff;"></div>`;
         }
